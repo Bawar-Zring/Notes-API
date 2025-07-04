@@ -16,16 +16,6 @@ cd note-API
 cp .env.example .env
 ```
 
-
-
-
-
-
-
-
-
-
-
 2. **Configure environment variables**
 
 Edit .env to match Docker database settings:
@@ -43,28 +33,36 @@ DB_USERNAME=root
 DB_PASSWORD=
 ```
 
-3. **Generate application key**
-```bash
-docker-compose run --rm app php artisan key:generate
-```
 
-4. **Build and launch containers**
+3. **Build and launch containers**
    ```bash
    docker-compose up -d --build
    ```
 
-5. **Install dependencies and setup Passport**
+
+
+4. **Install dependencies setup Passport**
 ```bash
-docker-compose exec notes-api-app-1 composer install
-docker-compose exec notes-api-app-1 php artisan install:api --passport
+docker exec notes-api-app-1 composer install
 ```
 
-6. **Run database migrations**
+5. **Generate application key**
+```bash
+docker exec notes-api-app-1 php artisan key:generate
+```
+
+6. **Setup Passport**
+```bash
+docker exec notes-api-app-1 php artisan install:api --passport
+```
+
+
+7. **Run database migrations**
 ```bash
 sudo docker exec -it notes-api-app-1 php artisan migrate
 ```
 
-7. **Set proper key permissions**
+8. **Set proper key permissions**
 ```bash
 sudo docker exec -it notes-api-app-1 chmod 600 storage/oauth-*.key && \
 chown www-data:www-data storage/oauth-*.key
