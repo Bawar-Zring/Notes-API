@@ -63,8 +63,15 @@ sudo docker exec -it notes-api-app-1 php artisan migrate
 ```
 
 8. **Set proper key permissions**
+
+Go to inside notes-api-app-1 container
 ```bash
-sudo docker exec -it notes-api-app-1 chmod 600 storage/oauth-*.key && \
+sudo docker exec -it notes-api-app-1 bash
+```
+
+then run:
+```bash
+chmod 600 storage/oauth-*.key && \
 chown www-data:www-data storage/oauth-*.key
 ```
 
