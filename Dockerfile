@@ -10,6 +10,6 @@ COPY . /var/www/html
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-RUN composer install --no-interaction --prefer-dist --no-dev
+RUN composer install 
 
 RUN chown -R www-data:www-data /var/www/html

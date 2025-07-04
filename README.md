@@ -1,25 +1,34 @@
 # Notes API 📝
 
-An API for managing notes built with Laravel 12 and Laravel Passport for authentication. This API provides full CRUD operations for notes with secure authentication.
+A secure REST API for managing notes built with Laravel 12 and Laravel Passport for authentication. Provides full CRUD operations with OAuth2 token-based authentication.
 
 ## 📋 Requirements
 
-- **PHP**: ^8.2
-- **Composer**: Latest version
-- **MySQL**: Database (included)
 - **Docker**: For containerized deployment
+- Docker Compose: For managing multi-container applications
+
+## 🚀 Docker Deployment
+
+### 1. Clone repository & prepare environment
+```bash
+git clone <repository-url>
+cd note-API
+cp .env.example .env
+```
 
 
 
-### Docker Deployment
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd note-API
-   ```
 
-2. **Environment setup**
+
+
+
+
+
+
+2. **Configure environment variables**
+
+Edit .env to match Docker database settings:
    ```bash
    cp .env.example .env
    ```
@@ -34,33 +43,34 @@ DB_USERNAME=root
 DB_PASSWORD=
 ```
 
-3. **Build and run with Docker Compose**
+3. **Generate application key**
+```bash
+docker-compose run --rm app php artisan key:generate
+```
+
+4. **Build and launch containers**
    ```bash
    docker-compose up -d --build
    ```
 
-## 🔧 Configuration
+5. **Install dependencies and setup Passport**
+```bash
+docker-compose exec notes-api-app-1 composer install
+docker-compose exec notes-api-app-1 php artisan install:api --passport
+```
 
-### Passport Setup
+6. **Run database migrations**
+```bash
+sudo docker exec -it notes-api-app-1 php artisan migrate
+```
 
-After installation, you need to set up Passport:
+7. **Set proper key permissions**
+```bash
+sudo docker exec -it notes-api-app-1 chmod 600 storage/oauth-*.key && \
+chown www-data:www-data storage/oauth-*.key
+```
 
-```bash
-sudo docker exec -it note-api-app-1 php artisan install:api --passport
-```
-Then:
-```bash
-sudo docker exec -it note-api-app-1 php artisan migrate
-```
-Then:
-```bash
-sudo docker exec -it note-api-app-1 php artisan passport:client --personal
-```
-Then:
-```bash
-sudo docker exec -it note-api-app-1 chown www-data:www-data storage/oauth-private.key storage/oauth-public.key && \
-chmod 600 storage/oauth-private.key storage/oauth-public.key
-```
+
 
 
 ## 📚 API Documentation
@@ -114,6 +124,13 @@ This API uses Laravel Passport for authentication. All note endpoints require a 
        "password": "password"
      }'
    ```
+
+3. **Use token in requests (Example: List notes)**
+```bash
+curl -X GET http://localhost:8000/api/notes \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
