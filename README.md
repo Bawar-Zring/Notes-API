@@ -16,53 +16,36 @@ cd note-API
 cp .env.example .env
 ```
 
-2. **Configure environment variables**
 
-Edit .env to match Docker database settings:
-   ```bash
-   cp .env.example .env
-   ```
-Edit your .env file to match the Docker DB(MySQL) settings:
-
-```bash
-DB_CONNECTION=mysql
-DB_HOST=db
-DB_PORT=3306
-DB_DATABASE=notes_db
-DB_USERNAME=root
-DB_PASSWORD=
-```
-
-
-3. **Build and launch containers**
+2. **Build and launch containers**
    ```bash
    docker-compose up -d --build
    ```
 
 
 
-4. **Install dependencies setup Passport**
+3. **Install dependencies setup Passport**
 ```bash
 docker exec notes-api-app-1 composer install
 ```
 
-5. **Generate application key**
+4. **Generate application key**
 ```bash
 docker exec notes-api-app-1 php artisan key:generate
 ```
 
-6. **Setup Passport**
+5. **Setup Passport**
 ```bash
 docker exec notes-api-app-1 php artisan install:api --passport
 ```
 
 
-7. **Run database migrations**
+6. **Run database migrations**
 ```bash
 sudo docker exec -it notes-api-app-1 php artisan migrate
 ```
 
-8. **Set proper key permissions**
+7. **Set proper key permissions**
 
 Go to inside notes-api-app-1 container
 ```bash
@@ -74,7 +57,6 @@ then run:
 chmod 600 storage/oauth-*.key && \
 chown www-data:www-data storage/oauth-*.key
 ```
-
 
 
 

@@ -8,8 +8,10 @@ WORKDIR /var/www/html
 
 COPY . /var/www/html
 
+COPY .env.example .env
+
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-RUN composer install 
+RUN composer install --no-interaction --prefer-dist --no-dev
 
 RUN chown -R www-data:www-data /var/www/html
